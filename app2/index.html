@@ -178,7 +178,6 @@ function query(){
 }
 
 //編輯資料的函式
-function update(){
   function showStu(id) {
     $.get("api/show_student.php",{id},(modal)=>{
         $("#modal").html(modal)
