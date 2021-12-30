@@ -21,15 +21,19 @@
 
     <div class="card-columns" id='classlist'></div>
 
-  </div>
+    <table id="students" class="table">
 
+
+
+    </table>
+  </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
     integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
     crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
     integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
     crossorigin="anonymous"></script>
-
+  
   
 </body>
 </html>
@@ -44,23 +48,49 @@
 list();
 // append 就是把東西加到後面
 function list() {
-  $.get("api/list.php", (list) => {
+    $.get("api/list.php", (list) => {
+
       let classlist=JSON.parse(list)
       let card;
       classlist.forEach((c,i)=>{
-        card=`<div class="card">
+        card=`<a href="#" onclick="loadStudents('${c.班級}')">
+              <div class="card">
                   <div class="card-body">
                     <h5 class="card-title">${c.班級}</h5>
                     <p class="card-text">${c.人數}</p>
                   </div>
-                </div>`;
+                </div>
+                </a>`;
         $("#classlist").append(card)
 
 
       })          
     })
+  }
+// get json 不管3721拿到資料就總之run一遍
+//載入班級學員列表
+function loadStudents(classnum){
+    $("#students").html("");
+    $.getJSON("api/load_student.php",{'classroom':classnum},(stulist)=>{
+        console.log(stulist)
+        //stulist.forEach(function(stu,idx){})
+        //stulist.forEach((stu,idx)=>{})
+        let tr="";
+        stulist.forEach((stu,idx)=>{
+          tr=`
+              <tr>
+                <td>${stu.uni_id}</td>
+                <td>${stu.seat_num}</td>
+                <td>${stu.name}</td>
+                <td>${stu.birthday}</td>
+                <td>${stu.national_id}</td>
+              </tr>
+          `;
+          $("#students").append(tr);
+        })
 
-}
+    })
+  }
 
 //新增資料的函式
 function create(){
